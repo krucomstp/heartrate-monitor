@@ -40,6 +40,7 @@ QUARK_SE_IPM_DEFINE(hrs_ipm, 0, QUARK_SE_IPM_INBOUND);
 #define HEART_RATE_APPEARANCE	0x0341
 #define HRS_ID			99
 
+static uint8_t ccc_value;
 static uint16_t hrs_value = 0;
 static struct bt_gatt_ccc_cfg hrmc_ccc_cfg[CONFIG_BLUETOOTH_MAX_PAIRED] = {};
 struct bt_conn *default_conn;
@@ -52,6 +53,11 @@ static const struct bt_data ad[] = {
 static const struct bt_data sd[] = {
 	BT_DATA(BT_DATA_NAME_COMPLETE, DEVICE_NAME, DEVICE_NAME_LEN)
 };
+
+static void hrmc_ccc_cfg_changed(uint16_t value)
+{
+	ccc_value = value;;
+}
 
 static ssize_t read_name(struct bt_conn *conn, const struct bt_gatt_attr *attr,
                          void *buf, uint16_t len, uint16_t offset)
@@ -86,7 +92,7 @@ static struct bt_gatt_attr hrs_attrs[] = {
         BT_GATT_CHARACTERISTIC(BT_UUID_HRS_MEASUREMENT, BT_GATT_CHRC_NOTIFY),
         BT_GATT_DESCRIPTOR(BT_UUID_HRS_MEASUREMENT, BT_GATT_PERM_READ,
 			   NULL, NULL, NULL),
-	BT_GATT_CCC(hrmc_ccc_cfg, NULL)
+	BT_GATT_CCC(hrmc_ccc_cfg, hrmc_ccc_cfg_changed)
 };
 
 static void connected(struct bt_conn *conn, uint8_t err)

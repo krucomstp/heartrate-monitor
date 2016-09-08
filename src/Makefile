@@ -1,6 +1,6 @@
 ccflags-y += ${PROJECTINCLUDE} \
-                -I$(srctree)/include/drivers \
-                -I$(srctree)/drivers
+		-I$(ZEPHYR_BASE)/include/drivers \
+		-I$(ZEPHYR_BASE)/drivers
 
 ifeq ($(ARCH), arc)
 	obj-y = main_arc.o heartrate.o
