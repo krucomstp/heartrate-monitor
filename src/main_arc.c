@@ -35,7 +35,6 @@
 
 /* measure every 2ms */
 #define INTERVAL 	2
-#define SLEEPTICKS MSEC(INTERVAL)
 
 #define ADC_DEVICE_NAME "ADC_0"
 #define ADC_CHANNEL 	12
@@ -94,8 +93,6 @@ static void show_heartbeat_using_fade_effect(int index)
 void main(void)
 {
 	struct device *adc, *ipm;
-	struct nano_timer timer;
-	uint32_t data[2] = {0, 0};
 	uint8_t set_config;
 	int count;
 	int checkTime;
@@ -105,8 +102,6 @@ void main(void)
 	bool isValid;
 	char str[16];
 	uint8_t ipm_value;
-
-	nano_timer_init(&timer, data);
 
 	/* Initialize the IPM */
         ipm = device_get_binding("hrs_ipm");
@@ -207,8 +202,7 @@ void main(void)
 			count = 0;
 		}
 
-		nano_timer_start(&timer, SLEEPTICKS);
-		nano_timer_test(&timer, TICKS_UNLIMITED);
+		k_sleep(INTERVAL);
 	}
 	adc_disable(adc);
 }

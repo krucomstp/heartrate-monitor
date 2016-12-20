@@ -1,15 +1,31 @@
+# Zephyr Heartrate Monitor on Arduino 101
+
 This is the sample app to measure heart rate using a pulse sensor
 on an Arduino 101. The measured data will then be sent to a connected
 smart phone over BLE.
 
+## Bluetooth Firmware
 A bluetooth firmware is neccessary to use the nRF51 Bluetooth LE controller.
 Follow the instructions here to prepare the firmware:
-https://www.zephyrproject.org/doc/board/arduino_101_ble.html#arduino-101-ble
+https://wiki.zephyrproject.org/view/Arduino_101#Bluetooth_firmware_for_the_Arduino_101
 
-Build and flash the ARC-side application with the following commands:
- $ make pristine && make BOARD=arduino_101_sss_factory ARCH=arc
- $ sudo -E dfu-util -a sensor_core -D output/zephyr.bin
+## Building and flashing the applications to Arduino 101
+In order to build the Zephyr app for the Arduino 101 board, first setup the
+Zephyr dev environment following the guidance here.
+* https://wiki.zephyrproject.org/view/Arduino_101
 
-Build and flash the x86-side application with these commands:
- $ make pristine && make BOARD=arduino_101_factory ARCH=x86
- $ sudo -E dfu-util -a x86_app -D output/zephyr.bin
+In the app source folder, use the following commands to build and flash the app
+to Arduino 101 board:
+
+### ARC core application
+```
+    $ make pristine
+    $ make BOARD=arduino_101_sss ARCH=arc
+    $ sudo -E dfu-util -a sensor_core -D outdir/arduino_101_sss/zephyr.bin
+```
+
+### x86 core application
+```
+    $ make BOARD=arduino_101 ARCH=x86
+    $ sudo -E dfu-util -a x86_app -D outdir/arduino_101/zephyr.bin
+```
